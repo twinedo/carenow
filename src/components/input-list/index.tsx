@@ -7,24 +7,27 @@ import moment from 'moment';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { FaCheck } from 'react-icons/fa';
+import { Button } from '@chakra-ui/react';
 
 const EntrySchema = Yup.object().shape({
 	patient_name: Yup.string().required('Patient name is required'),
 	patient_id: Yup.string().required('Patient id is required'),
 	treatment_date: Yup.string().required('Date is required'),
-	treatment_desc: Yup.array(Yup.string()).required(
-		'Treatment Description is required'
-	),
-	medications: Yup.array(Yup.string()).required(
-		'Medications Prescribed is required'
-	),
+	treatment_desc: Yup.array()
+		.of(Yup.string())
+		.min(1, 'Treatment Description field must have at least 1 items')
+		.required('Treatment Description is required'),
+	medications: Yup.array()
+		.of(Yup.string())
+		.min(1, 'Medications Prescribed field must have at least 1 items')
+		.required('Medications Prescribed is required'),
 	cost: Yup.number().required('Cost is required'),
 });
 
 export type IFormType = {
 	id: number;
-	title: string;
-	placeholder: string;
+	title?: string;
+	placeholder?: string;
 	name: keyof IFormField;
 	type:
 		| 'none'
@@ -36,12 +39,12 @@ export type IFormType = {
 		| 'decimal'
 		| 'search'
 		| 'file';
-	isText: boolean;
-	isOption: boolean;
-	isDate: boolean;
-	isAttach: boolean;
-	icon: any;
-	options: string[] | any[];
+	isText?: boolean;
+	isOption?: boolean;
+	isDate?: boolean;
+	isAttach?: boolean;
+	icon?: any;
+	options?: string[] | any[] | [];
 	isOptionsMultiple?: boolean;
 };
 
@@ -68,11 +71,6 @@ function InputList(props: TInputList) {
 			name: 'patient_name',
 			type: 'text',
 			isText: true,
-			isOption: false,
-			isDate: false,
-			isAttach: false,
-			icon: null,
-			options: [],
 		},
 		{
 			id: 2,
@@ -81,11 +79,6 @@ function InputList(props: TInputList) {
 			name: 'patient_id',
 			type: 'text',
 			isText: true,
-			isOption: false,
-			isDate: false,
-			isAttach: false,
-			icon: null,
-			options: [],
 		},
 		{
 			id: 3,
@@ -93,12 +86,7 @@ function InputList(props: TInputList) {
 			placeholder: moment().format('DD MMMM YYYY'),
 			name: 'treatment_date',
 			type: 'text',
-			isText: false,
-			isOption: false,
 			isDate: false,
-			isAttach: false,
-			icon: null,
-			options: [],
 		},
 		{
 			id: 4,
@@ -108,9 +96,6 @@ function InputList(props: TInputList) {
 			type: 'text',
 			isText: false,
 			isOption: false,
-			isDate: false,
-			isAttach: false,
-			icon: null,
 			options: [
 				'Treatment Description 1',
 				'Treatment Description 2',
@@ -126,9 +111,6 @@ function InputList(props: TInputList) {
 			type: 'text',
 			isText: false,
 			isOption: false,
-			isDate: false,
-			isAttach: false,
-			icon: null,
 			options: ['Medication 1', 'Medication 2', 'Medication 3'],
 			isOptionsMultiple: true,
 		},
@@ -137,13 +119,8 @@ function InputList(props: TInputList) {
 			title: 'Cost',
 			placeholder: 'Cost',
 			name: 'cost',
-			type: 'text',
+			type: 'decimal',
 			isText: true,
-			isOption: false,
-			isDate: false,
-			isAttach: false,
-			icon: null,
-			options: [],
 		},
 	]);
 
@@ -160,6 +137,7 @@ function InputList(props: TInputList) {
 		onSubmit: (values: IFormField) => {
 			console.log('submitform', values);
 			_onSubmitData(values);
+			formik.resetForm();
 		},
 	});
 
@@ -266,17 +244,15 @@ function InputList(props: TInputList) {
 								/>
 							</div>
 						)}
-						{o.isOption && (
+						{o?.isOption && (
 							<div className='absolute top-[80px] z-50 max-h-[250px] overflow-y-scroll bg-white p-4 shadow-md w-full cursor-pointer gap-4'>
-								{o.options.map((opt) => (
+								{o?.options?.map((opt) => (
 									<div
 										key={opt}
 										className={
 											'hover: text-bold flex row items-center justify-between h-[30px]'
 										}
 										onClick={() => {
-											console.log('text selected', opt);
-											// formik.setFieldValue(`${o.name}`, opt);
 											_onFormClick(o, i);
 											_onOptionSelect(opt, o.name);
 										}}>
@@ -290,11 +266,14 @@ function InputList(props: TInputList) {
 						)}
 					</div>
 				))}
-				<div
-					onClick={() => formik.handleSubmit()}
-					className='rounded-xl bg-[#E73873] text-white p-2 flex items-center justify-center'>
+				<Button
+					bgColor='#E73873'
+					color='white'
+					p={2}
+					borderRadius='lg'
+					onClick={() => formik.handleSubmit()}>
 					Submit
-				</div>
+				</Button>
 			</div>
 		</div>
 	);

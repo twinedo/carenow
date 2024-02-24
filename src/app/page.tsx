@@ -1,32 +1,24 @@
 'use client';
-import InputList from '@/components/input-list';
+import InputList, { IFormField } from '@/components/input-list';
+import Toolbar from '@/components/toolbar';
+import addData from '@/services/api';
 import { Box, Card, Text } from '@chakra-ui/react';
 import Image from 'next/image';
 
 export default function Home() {
+	const _onSubmit = async (values: IFormField) => {
+		try {
+			const response = await addData(values);
+			console.log('res submit', response);
+		} catch (error) {
+			console.error('error', error);
+		}
+	};
+
 	return (
 		<main className='flex min-h-screen h-[100%] flex-col items-center justify-between bg-[#F9F8F4]'>
-			<Box
-				w='100%'
-				px='24px'
-				h={65}
-				display='flex'
-				justifyItems='center'
-				alignItems='center'
-				position='fixed'
-				pb={[0, '12px']}
-				zIndex={11}
-				borderBottom='1px solid #e2e8f0'
-				background='white'>
-				<Image
-					src='https://www.carenow.id/carenow-logo-raspberry-black.png'
-					width={130}
-					height={35}
-					alt='logo'
-					priority
-				/>
-			</Box>
-			<Box maxW='960px' mt='65px' w={['100%', '100%', '70%']} mx='auto'>
+			<Toolbar />
+			<Box maxW='960px' mt='65px' w='80%' mx='auto'>
 				<Card my='24px' p='20px' gap={5} display='flex' h='100%' boxShadow='lg'>
 					<Box>
 						<Text fontSize={30} fontWeight='bold'>
@@ -41,6 +33,7 @@ export default function Home() {
 							height='100%'
 							p='20px'
 							flex={1}
+							flexDir='column'
 							alignItems='center'>
 							<Image
 								src='/assets/illustration.png'
@@ -49,9 +42,16 @@ export default function Home() {
 								alt='home'
 								priority
 							/>
+							<Image
+								src='https://www.carenow.id/carenow-logo-raspberry-black.png'
+								width={80}
+								height={35}
+								alt='logo'
+								priority
+							/>
 						</Box>
 						<Box display='flex' flex={1} justifyContent='center'>
-							<InputList _onSubmitData={(data) => console.log('data', data)} />
+							<InputList _onSubmitData={(data) => _onSubmit(data)} />
 						</Box>
 					</Box>
 				</Card>

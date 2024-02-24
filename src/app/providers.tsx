@@ -1,4 +1,4 @@
-// app/providers.tsx
+//provider for ChakraUI
 'use client';
 
 import { ChakraProvider } from '@chakra-ui/react';
