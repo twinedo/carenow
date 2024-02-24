@@ -7,9 +7,10 @@ import {
 	collection,
 } from 'firebase/firestore';
 
-const db: Firestore = getFirestore(firebase_app);
+const db: Firestore = getFirestore(firebase_app); //firestore api
+
 export type AddDataResult = {
-	result: any; // Type of result from setDoc
+	result: any;
 	error: Error | null;
 };
 

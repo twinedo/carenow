@@ -5,10 +5,11 @@ import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import moment from 'moment';
 import Calendar from 'react-calendar';
-import 'react-calendar/dist/Calendar.css';
 import { FaCheck } from 'react-icons/fa';
 import { Button } from '@chakra-ui/react';
+import 'react-calendar/dist/Calendar.css';
 
+//validation rule
 const EntrySchema = Yup.object().shape({
 	patient_name: Yup.string().required('Patient name is required'),
 	patient_id: Yup.string().required('Patient id is required'),
@@ -24,6 +25,7 @@ const EntrySchema = Yup.object().shape({
 	cost: Yup.number().required('Cost is required'),
 });
 
+//type of form
 export type IFormType = {
 	id: number;
 	title?: string;
@@ -48,6 +50,7 @@ export type IFormType = {
 	isOptionsMultiple?: boolean;
 };
 
+//type of field
 export type IFormField = {
 	patient_name: string;
 	patient_id: number | string;
@@ -57,9 +60,10 @@ export type IFormField = {
 	cost: number | string;
 };
 
-export interface TInputList {
+//props of InputList
+export type TInputList = {
 	_onSubmitData: (data: IFormField) => void;
-}
+};
 
 function InputList(props: TInputList) {
 	const { _onSubmitData } = props;
@@ -141,6 +145,7 @@ function InputList(props: TInputList) {
 		},
 	});
 
+	//form click function
 	const _onFormClick = (key: IFormType, i: number) => {
 		const dat = [...formList];
 		if (key.name === 'treatment_desc' || key.name === 'medications') {
@@ -176,6 +181,7 @@ function InputList(props: TInputList) {
 		};
 	}, []);
 
+	//on options select
 	const _onOptionSelect = (option: string, name: keyof IFormField) => {
 		const existingValue = formik.values[name];
 		let updatedValue: string | string[];
