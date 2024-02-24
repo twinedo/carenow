@@ -9,9 +9,12 @@ export default function Home() {
 	const _onSubmit = async (values: IFormField) => {
 		try {
 			const response = await addData(values);
-			console.log('res submit', response);
+			if (response.result) {
+				alert('Add Patients data is succeeded');
+			}
 		} catch (error) {
-			console.error('error', error);
+			// console.error('error', error);
+			alert(error?.toString());
 		}
 	};
 
